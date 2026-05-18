@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Deep Search Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <div class="orb orb-a"></div>
+    <div class="orb orb-b"></div>
+  </div>
+
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 3L3 8v8l9 5 9-5V8l-9-5z"/>
+            <path d="M12 12l9-5M12 12L3 7M12 12v9"/>
+          </svg>
+        </div>
+        <div>
+          <h1>网络安全 <span>智能研判</span></h1>
+          <p class="brand-tag">企业安全智能助手</p>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <label class="field-label" for="threadId" id="lbl-thread">会话 ID</label>
+        <input type="text" id="threadId" class="field-input" placeholder="留空自动生成" />
+        <div class="status-pill" id="statusPill">
+          <span class="dot" id="wsDot"></span>
+          <span id="wsStatus">未连接</span>
+        </div>
+        <div class="btn-row">
+          <button type="button" class="btn btn-ghost" id="btnConnect">连接</button>
+          <button type="button" class="btn btn-ghost" id="btnNewSession">新会话</button>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <p class="section-title">快捷提问</p>
+        <div class="chips" id="quickChips">
+          <button type="button" class="chip" data-q="CVE-2023-46604 有哪些在野利用？临时怎么缓解？">漏洞情报</button>
+          <button type="button" class="chip" data-q="《网络安全法》对数据泄露的报告义务是什么？">合规法律</button>
+          <button type="button" class="chip" data-q="查询未修复的高危漏洞及互联网暴露面资产">内部资产</button>
+          <button type="button" class="chip" data-q="请对企业互联网暴露面未修复高危漏洞做合规与威胁研判，并生成 PDF 风险评估报告">完整研判+PDF</button>
+        </div>
+      </div>
+
+      <div class="sidebar-section sidebar-upload">
+        <p class="section-title" id="h-upload">参考文件</p>
+        <p class="hint" id="upload-desc">可选上传，任务开始时复制到工作目录</p>
+        <label for="fileInput" class="btn btn-outline file-label" id="lbl-file">选择文件</label>
+        <input type="file" id="fileInput" multiple />
+        <button type="button" class="btn btn-outline btn-block" id="btnUpload" disabled>上传</button>
+        <p id="uploadHint" class="upload-hint"></p>
+        <div id="filesList" class="files-list"></div>
+      </div>
+
+      <div class="sidebar-footer links">
+        <a href="/docs" target="_blank" rel="noopener">API 文档</a>
+        <a href="/redoc" target="_blank" rel="noopener">ReDoc</a>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="main-header">
+        <div>
+          <h2 id="h-chat">对话</h2>
+          <p id="subtitle" class="subtitle"></p>
+        </div>
+        <div class="main-actions">
+          <button type="button" class="btn btn-ghost btn-sm" id="btnClearLog">清空</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="btnListFiles" disabled>输出文件</button>
+        </div>
+      </header>
+
+      <div class="chat-panel">
+        <div id="chatFeed" class="chat-feed" role="log" aria-live="polite">
+          <div class="empty-state" id="emptyState">
+            <div class="empty-icon" aria-hidden="true">◇</div>
+            <p>连接会话后，在此查看对话与 Agent 执行进度</p>
+          </div>
+        </div>
+      </div>
+
+      <footer class="composer">
+        <label class="field-label" for="query" id="lbl-query">输入问题</label>
+        <div class="composer-box">
+          <textarea id="query" rows="2" placeholder="输入安全问题…"></textarea>
+          <button type="button" class="btn btn-primary btn-send" id="btnStart" disabled title="发送">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M13 6l6 6-6 6"/>
+            </svg>
+            <span id="btnSendLabel">发送</span>
+          </button>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
