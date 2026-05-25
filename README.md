@@ -1,8 +1,5 @@
-# 网络安全智能研判助手 — 从零开发构建指南
+# 基于DeepAgents的企业安全多智能体情报系统 
 
-本文档面向**从零手写本项目**的开发者，说明各功能模块的**推荐实现顺序**、**依赖关系**与**具体怎么做**。
-
----
 
 ## 一、项目目标与最终形态
 
@@ -82,7 +79,7 @@ flowchart TB
 
 ---
 
-## 二、推荐实现顺序总览
+## 二、实现顺序总览
 
 按**可验证、可增量**原则，分 **12 个阶段** 完成。
 
@@ -148,7 +145,7 @@ deep_search_pro/
 
 ### 3.3 `.env` 模板
 
-先只配大模型与 MySQL，后续阶段再补 `TAVILY_API_KEY`、`MILVUS_*` 等（详见运行指南第五节）。
+先只配大模型与 MySQL，后续阶段再补 `TAVILY_API_KEY`、`MILVUS_*` 等。
 
 ---
 
@@ -177,7 +174,7 @@ print(model.invoke("你好，回复 OK").content)
 2. `prompts.py` 用 `yaml.safe_load` 在**模块导入时**加载一次，导出 `main_agent_content`、`sub_agents_content`。
 3. 提示词要写明：总指挥用 `task` 工具调度子智能体（`subagent_type` 为配置里的英文 key）。
 
-**本阶段可先写简短版总指挥提示词**，阶段 8 再补全「问答模式 / 完整研判模式」规则。
+**本阶段先写简短版总指挥提示词**，阶段 8 再补全「问答模式 / 完整研判模式」规则。
 
 ---
 
@@ -486,58 +483,8 @@ main_agent = create_deep_agent(
 
 **验证**：浏览器打开 `http://127.0.0.1:8000/`，走一遍「连接 → 快捷提问 → 看进度 → 下载报告」。
 
----
 
-## 十六、模块依赖关系（开发时查阅）
-
-```text
-prompts.yml ──► prompts.py ──┬──► subagents/*.py
-                             └──► main_agent.py ◄── llm.py
-tools/*.py ──────────────────────► subagents/*.py
-utils/path_utils.py ─────────────► markdown_tools, pdf_tools, upload_file_read_tool
-api/context.py ──────────────────► run_deep_agent, tools (get_session_context)
-api/monitor.py ◄───────────────── tools, main_agent (report_*)
-agent/main_agent.py ◄──────────── api/server.py (run_deep_agent)
-static/app.js ───────────────────► api/server.py (HTTP/WS)
-```
-
-**不要颠倒的顺序**：
-
-- 没有 `context.py` 就在工具里写全局 `session_dir` 变量 → 多用户必串台。
-- 没有 `monitor` 就接前端 → 看不到进度，难以调试 Agent。
-- 没有 `path_utils` 就让模型直接写路径 → 文件会落到项目根或错误目录。
-
----
-
-## 十七、各模块实现 checklist
-
-开发时可按表自检：
-
-- [ ] `.env` 中 LLM、MySQL、Tavily、Milvus 配置齐全
-- [ ] `prompts.yml` 区分问答模式与完整研判模式
-- [ ] 三个 `@tool` MySQL 函数均能 invoke
-- [ ] Tavily / ThreatFox 至少一个返回非空
-- [ ] Milvus ingest 后 `create_ask_delete` 有切片
-- [ ] `generate_markdown` + `convert_md_to_pdf` 在 session 目录产出文件
-- [ ] `run_deep_agent` 在 `finally` 中 reset ContextVar
-- [ ] WebSocket `thread_id` 与 `/api/task` 一致
-- [ ] `/api/files` 拒绝 output 外的路径
-- [ ] 前端能显示 `assistant_call` 与 `task_result`
-
----
-
-## 十八、与运行指南的分工
-
-| 文档                                             | 侧重                                                  |
-| ------------------------------------------------ | ----------------------------------------------------- |
-| [从零构建与运行指南.md](./从零构建与运行指南.md) | 环境安装、`.env`、MySQL/Milvus 初始化、API 说明、排错 |
-| **本文档**                                       | 开发顺序、模块职责、关键 API/代码模式、分阶段验证     |
-
-建议路径：**先按本文档分阶段实现 → 再按运行指南做一次性部署联调**。
-
----
-
-## 十九、扩展方向（可选）
+## 十六、扩展方向
 
 完成主链路后，可按优先级扩展：
 
@@ -549,7 +496,7 @@ static/app.js ───────────────────► api/s
 
 ---
 
-## 二十、核心代码索引
+## 十八、核心代码索引
 
 | 需求                    | 文件                                                         |
 | ----------------------- | ------------------------------------------------------------ |
